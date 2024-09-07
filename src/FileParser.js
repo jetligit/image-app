@@ -1,20 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import ExifReader from './node_modules/exifreader/src/exif-reader.js';
-import 
+import ExifReader from 'exifreader';
 
-function Acceptor(){
-    const [MyLocation, setMyLocation] = useState({ latitude: null, longitude: null });
-    //const [latitude, setLatitude] = useState(-1);
-    //const [longitude, setLongtiude] = useState(-1);
+function Acceptor() {
+    const [myLocation, setMyLocation] = useState({ latitude: null, longitude: null });
 
     useEffect(() => {
         const fetchLocation = async () => {
-            const {latitude, longitude} = await ExifReader.gps('../Images/central_park.jpg');
-            setMyLocation({latitude, longitude});
-        }
-    })
-    
-    return (<h1> latitude is: {latitude} </h1>)
+            try {
+                const response = await fetch('Images/example_image1.jpg');
+                const arrayBuffer = await response.arrayBuffer();
+                const tags = ExifReader.load(arrayBuffer);
+                
+                const latitude = tags.GPSLatitude?.description;
+                const longitude = tags.GPSLongitude?.description;
+
+                if (latitude && longitude) {
+                    setMyLocation({ latitude, longitude });
+                } else {
+                    console.error('GPS data not found');
+                }
+            } catch (error) {
+                console.error('Error fetching or parsing image:', error);
+            }
+        };
+
+        fetchLocation();
+    }, []); // Empty dependency array means this useEffect runs once after the initial render
+
+    return (
+        <div>
+            <p>My image's latitude is: {myLocation.latitude}</p>
+            <p>My image's longitude is: {myLocation.longitude}</p>
+        </div>
+    );
 }
 
 export default Acceptor;
