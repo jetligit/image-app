@@ -1,15 +1,9 @@
-//import { Component } from "react";
-//import {Map, Marker, GoogleApiWrapper} from 'google-maps-react'
-import Location from './Location.jsx'
-import Acceptor from './FileParser.js'
+import { Component } from "react";
+import {Map, Marker, GoogleApiWrapper} from 'google-maps-react'
+//import Location from './Location.jsx'
+//import Acceptor from './FileParser.js'
 
-/** 
-const markerPosition = {
-  lat: 40.748817, // Example latitude (New York)
-  lng: -73.985428 // Example longitude (New York)
-};
-*/
-
+/** props example code which displays the information sent over from here to Location.jsx and 
 function App () {
   return (
     <>
@@ -19,8 +13,32 @@ function App () {
     </>
   );
 }
+*/
 
-/** 
+
+/** list of multiple marker elements
+ * when I figure out how to use EXF to get the gps locations, I could potentially use props to send over the coordinates, create a list of markers, and then display those markers below
+  */
+const markers = [
+  {
+    name: "New York",
+    location: {
+      lat: 40.748817, 
+      lng: -73.985428,
+    },
+  },
+  {
+    name: "Los Angeles",
+    location: {
+      lat: 34.0536909, 
+      lng: -118.242766,
+    },
+  },
+];
+
+
+ 
+/** how markers.map() works here is it iterates over each element of the markers array and returns a Marker object (displayed as a pin) for each element */
 class MapContainer extends Component {
   render() {
     return(
@@ -30,11 +48,15 @@ class MapContainer extends Component {
         zoom = {10}
         initialCenter = {{lat: 40.713051, lng: -74.007233}}
       >
-
-        // cannot read my location
-        <Marker position = {Location} />
+        {markers.map((marker) => (
+          <Marker 
+            key = {marker.name}
+            position = {marker.location} 
+          />
+          
+        ))}
       </Map>
-    );
+    )
   }
 }
 export default GoogleApiWrapper(
@@ -42,6 +64,3 @@ export default GoogleApiWrapper(
     apiKey: "AIzaSyBZLadZhcb4dqAD6w-RZ6XQg74YGgx36rA"
   }
 )(MapContainer)
-*/
-
-export default App
