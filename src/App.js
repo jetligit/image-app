@@ -1,9 +1,10 @@
 import { Component } from "react";
 import {Map, Marker, GoogleApiWrapper} from 'google-maps-react'
 //import Location from './Location.jsx'
-//import Acceptor from './FileParser.js'
+import Acceptor from './FileParser.js'
 
-/** props example code which displays the information sent over from here to Location.jsx and 
+/**  props example code which displays the information sent over from here to Location.jsx and FileParser.js */
+/** 
 function App () {
   return (
     <>
@@ -19,6 +20,9 @@ function App () {
 /** list of multiple marker elements
  * when I figure out how to use EXF to get the gps locations, I could potentially use props to send over the coordinates, create a list of markers, and then display those markers below
   */
+
+
+
 const markers = [
   {
     name: "New York",
@@ -42,6 +46,8 @@ const markers = [
 class MapContainer extends Component {
   render() {
     return(
+      <div>
+        <Acceptor></Acceptor>
       <Map
         google={this.props.google}
         style = {{width: "100%", height: "100%"}}
@@ -56,11 +62,17 @@ class MapContainer extends Component {
           
         ))}
       </Map>
+      </div>
     )
   }
 }
+
+
 export default GoogleApiWrapper(
   {
     apiKey: "AIzaSyBZLadZhcb4dqAD6w-RZ6XQg74YGgx36rA"
   }
 )(MapContainer)
+
+
+//export default App
