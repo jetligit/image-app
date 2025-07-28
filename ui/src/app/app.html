@@ -1,0 +1,13 @@
+<input type="file" accept="image/*" id = "fileInput" (change) = onFileSelected($event)>
+
+<google-map
+  height="500px"
+  width="100%"
+  [center]="center"
+  [zoom]="zoom">
+    
+    <map-marker [position]="center"></map-marker>
+
+  
+</google-map>
+
