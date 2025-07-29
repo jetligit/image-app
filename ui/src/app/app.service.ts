@@ -1,12 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, of, throwError,tap, map, Subject } from 'rxjs';
+import { ImageMetadata } from './ImageMetadata';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AppService{
-    private url = 'http://localhost:4200/extract';
+    private url = 'http://localhost:8080/extract';
     constructor(private http: HttpClient) { }
 
     processImage(file: File): Observable<number[]>{
@@ -15,12 +16,12 @@ export class AppService{
         return this.http.post<number[]>(this.url, formData);
     }
 
-    getCoords(): Observable<GLfloat[]> {
-        return this.http.get<number[]>(this.url).pipe(
-            catchError(this.handleError<GLfloat[]>('getCoords', []))
+    getCoords(): Observable<ImageMetadata[]> {
+        return this.http.get<ImageMetadata[]>(this.url).pipe(
+          catchError(this.handleError<ImageMetadata[]>('getCoords', []))
         );
     }
-
+      
     private handleError<T>(operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
             console.error(`${operation} failed:`, error); 

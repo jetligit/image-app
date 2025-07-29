@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 public class Controller {
 	private FileDAO myDao;
@@ -25,27 +26,34 @@ public class Controller {
 	
 	@PostMapping("/extract")
 	public ResponseEntity<float[]> createCoordinates(@RequestParam("image") MultipartFile file){
+		LOG.info("Received POST /extract request with file: " + file.getOriginalFilename() + ", size: " + file.getSize());
 		try (InputStream input = file.getInputStream()) {
-            Metadata metadata = ImageMetadataReader.readMetadata(input);
-            GpsDirectory gpsDir = metadata.getFirstDirectoryOfType(GpsDirectory.class);
-
+			Metadata metadata = ImageMetadataReader.readMetadata(input);
+			GpsDirectory gpsDir = metadata.getFirstDirectoryOfType(GpsDirectory.class);
+	
 			if (gpsDir != null){
 				GeoLocation location = gpsDir.getGeoLocation();
+				if (location == null) {
+					LOG.warning("GPS directory present but no GeoLocation found.");
+					return ResponseEntity.badRequest().body(null);
+				}
 				float[] coordinates = new float[2];
 				coordinates[0] = (float) location.getLatitude();
 				coordinates[1] = (float) location.getLongitude();
-				LOG.info("extracted coordinates");
-
-				myDao.createImageMetadata(coordinates[0], coordinates[1]); // Save to file
+				LOG.info("Extracted coordinates: lat=" + coordinates[0] + ", lon=" + coordinates[1]);
+	
+				myDao.createImageMetadata(coordinates[0], coordinates[1]);
 				return new ResponseEntity<>(coordinates, HttpStatus.CREATED);
 			} else {
+				LOG.warning("No GPS directory found in image metadata.");
 				return ResponseEntity.badRequest().body(null);
 			}
 		} catch(Exception e){
-			e.printStackTrace();
-            return ResponseEntity.status(500).body(null);
+			LOG.log(Level.SEVERE, "Error reading image metadata", e);
+			return ResponseEntity.status(500).body(null);
 		}
 	}
+	
 
 	@GetMapping("/extract")
 	public ResponseEntity<ArrayList<ImageMetadata>> getCoordinates(){
