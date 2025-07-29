@@ -6,7 +6,7 @@ import { catchError, Observable, of, throwError,tap, map, Subject } from 'rxjs';
     providedIn: 'root'
 })
 export class AppService{
-    private url = 'http://localhost:8080/extract';
+    private url = 'http://localhost:4200/extract';
     constructor(private http: HttpClient) { }
 
     processImage(file: File): Observable<number[]>{
