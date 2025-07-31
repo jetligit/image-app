@@ -33,3 +33,5 @@ build/
 .vscode/
 
 src/environments/environment*.ts
+ui/src/environments/environment.prod.ts
+ui/src/environments/environment.ts
