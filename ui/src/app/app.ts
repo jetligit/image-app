@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { AppService } from './app.service';
 import { CommonModule } from '@angular/common';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -44,12 +45,12 @@ export class App implements OnInit {
     }
   }
   
-  
-  
-  
-
   ngOnInit(): void {
     this.getCoords();
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApiKey}`;
+    script.async = true;
+    document.head.appendChild(script);
   }
 
   getCoords(): void {

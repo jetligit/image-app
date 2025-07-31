@@ -6,12 +6,9 @@ export default `<!doctype html>
     <base href="/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-
-    <script async="" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAltVQlhGEc_JXTuic4feCAyWJikyqJdrY">
-    </script>
   <link rel="stylesheet" href="styles-5INURTSO.css"></head>
   <body ngcm="">
     <app-root></app-root>
-  <script src="main-6HVCLQUJ.js" type="module"></script></body>
+  <script src="main-DDBW6YVR.js" type="module"></script></body>
 </html>
 `;
