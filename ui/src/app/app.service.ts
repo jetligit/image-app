@@ -2,12 +2,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, of, throwError,tap, map, Subject } from 'rxjs';
 import { ImageMetadata } from './ImageMetadata';
+import { environment } from '../environments/environment';
+
 
 @Injectable({
     providedIn: 'root'
 })
 export class AppService{
-    private url = 'http://localhost:8080/extract';
+    private baseUrl = environment.apiBaseUrl;
+    private url = `${this.baseUrl}/extract`;
     constructor(private http: HttpClient) { }
 
     processImage(file: File): Observable<number[]>{

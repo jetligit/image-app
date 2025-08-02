@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { AppService } from './app.service';
 import { CommonModule } from '@angular/common';
-import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -22,19 +21,19 @@ export class App implements OnInit {
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     const files = input.files;
-  
+
     if (files && files.length > 0) {
       const myFile = files[0];
       this.appService.processImage(myFile).subscribe({
         next: coords => {
           console.log('Upload success:', coords);
-  
+
           // Add the new location to the map markers
           const latLng = {
             lat: coords[0],   // assuming coords is [latitude, longitude]
             lng: coords[1]
           };
-  
+
           this.coords.push(latLng);
           this.center = latLng; // Optionally re-center the map on the new marker
         },
@@ -44,13 +43,9 @@ export class App implements OnInit {
       console.warn("No file selected.");
     }
   }
-  
+
   ngOnInit(): void {
     this.getCoords();
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApiKey}`;
-    script.async = true;
-    document.head.appendChild(script);
   }
 
   getCoords(): void {
