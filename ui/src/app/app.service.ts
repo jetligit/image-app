@@ -24,6 +24,10 @@ export class AppService{
           catchError(this.handleError<ImageMetadata[]>('getCoords', []))
         );
     }
+
+    clearCoords(): Observable<void> {
+        return this.http.delete<void>(this.url);
+    }
       
     private handleError<T>(operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {

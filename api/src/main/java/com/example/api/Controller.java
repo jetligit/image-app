@@ -66,4 +66,16 @@ public class Controller {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	@DeleteMapping("/extract")
+	public ResponseEntity<Void> deleteCoordinates(){
+		try{
+			LOG.info("deleting all coordinates");
+			myDao.deleteAllCoords();
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			LOG.log(Level.SEVERE, e.getMessage(), e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

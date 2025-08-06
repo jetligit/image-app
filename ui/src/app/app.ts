@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { AppService } from './app.service';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ import { CommonModule } from '@angular/common';
 export class App implements OnInit {
   coords: google.maps.LatLngLiteral[] = [];
 
-  constructor(private appService: AppService) {}
+  constructor(private appService: AppService, private cdr: ChangeDetectorRef) {}
 
   center: google.maps.LatLngLiteral = { lat: 40.7128, lng: -74.0060 };
   zoom = 12;
@@ -34,8 +35,9 @@ export class App implements OnInit {
             lng: coords[1]
           };
 
-          this.coords.push(latLng);
+          this.coords = [...this.coords, latLng];
           this.center = latLng; // Optionally re-center the map on the new marker
+          this.cdr.detectChanges(); 
         },
         error: err => console.error('Upload failed:', err)
       });
@@ -56,4 +58,15 @@ export class App implements OnInit {
       }));
     });
   }
+
+  clear(): void {
+    this.appService.clearCoords().subscribe({
+      next: () => {
+        this.coords = [];
+        this.cdr.detectChanges();  // now properly inside the function
+      },
+      error: (err: any) => console.error("failed to clear"),
+    });
+  }
+  
 }

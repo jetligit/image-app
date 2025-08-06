@@ -47,4 +47,10 @@ public class FileDAO {
 		objectMapper.writeValue(new File(filename), metadata);
 		return true;
 	}
+
+	public boolean deleteAllCoords() throws IOException{
+		metadata = new ArrayList<>();
+		save();
+		return true;
+	}
 }
