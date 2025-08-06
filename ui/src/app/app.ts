@@ -12,11 +12,12 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./app.css']
 })
 export class App implements OnInit {
-  coords: google.maps.LatLngLiteral[] = [];
+  coords: { lat: number; lng: number }[] = [];
+  center = { lat: 40.7128, lng: -74.0060 };
+
 
   constructor(private appService: AppService, private cdr: ChangeDetectorRef) {}
 
-  center: google.maps.LatLngLiteral = { lat: 40.7128, lng: -74.0060 };
   zoom = 12;
 
   onFileSelected(event: Event) {

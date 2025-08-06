@@ -11,6 +11,7 @@ import { environment } from '../environments/environment';
 export class AppService{
     private baseUrl = environment.apiBaseUrl;
     private url = `${this.baseUrl}/extract`;
+
     constructor(private http: HttpClient) { }
 
     processImage(file: File): Observable<number[]>{
