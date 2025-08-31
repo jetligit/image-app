@@ -5,10 +5,9 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 ## Development server
 
 To start a local development server, run:
+1. run maven and spring boot on the api folder with: mvn spring-boot:run
+2. then go to ui folder and run ng serve --open
 
-```bash
-ng serve
-```
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
@@ -57,3 +56,5 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+

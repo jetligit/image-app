@@ -14,10 +14,10 @@ export class AppService{
 
     constructor(private http: HttpClient) { }
 
-    processImage(file: File): Observable<number[]>{
+    processImage(file: File): Observable<ImageMetadata>{
         const formData = new FormData();
         formData.append('image', file);
-        return this.http.post<number[]>(this.url, formData);
+        return this.http.post<ImageMetadata>(this.url, formData);
     }
 
     getCoords(): Observable<ImageMetadata[]> {
