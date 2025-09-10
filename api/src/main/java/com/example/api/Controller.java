@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Set;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -66,10 +67,10 @@ public class Controller {
 	
 
 	@GetMapping("/extract")
-	public ResponseEntity<ArrayList<ImageMetadata>> getCoordinates(){
+	public ResponseEntity<Set<ImageMetadata>> getCoordinates(){
 		LOG.info("GET /extract");
 		try {
-			ArrayList<ImageMetadata> images = myDao.getAllImageMetadata();
+			Set<ImageMetadata> images = myDao.getAllImageMetadata();
 			return new ResponseEntity<>(images, HttpStatus.OK);
 		} catch (Exception e) {
 			LOG.log(Level.SEVERE, e.getMessage(), e);

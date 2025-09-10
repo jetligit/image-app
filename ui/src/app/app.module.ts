@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { App } from './app';
+import { AppComponent } from './app.component';
 import { GoogleMapsModule } from '@angular/google-maps';
 
 @NgModule({
   declarations: [],
   imports: [
-    App,
+    AppComponent,
     BrowserModule,
     GoogleMapsModule
   ],

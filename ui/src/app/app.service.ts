@@ -10,24 +10,27 @@ import { environment } from '../environments/environment';
 })
 export class AppService{
     private baseUrl = environment.apiBaseUrl;
-    private url = `${this.baseUrl}/extract`;
+    
+    private extractUrl = `${this.baseUrl}/extract`; // for POST/upload
+    private coordsUrl = `${this.baseUrl}/extract`;   // for GET
+
 
     constructor(private http: HttpClient) { }
 
     processImage(file: File): Observable<ImageMetadata>{
         const formData = new FormData();
         formData.append('image', file);
-        return this.http.post<ImageMetadata>(this.url, formData);
+        return this.http.post<ImageMetadata>(this.extractUrl, formData);
     }
 
     getCoords(): Observable<ImageMetadata[]> {
-        return this.http.get<ImageMetadata[]>(this.url).pipe(
+        return this.http.get<ImageMetadata[]>(this.coordsUrl).pipe(
           catchError(this.handleError<ImageMetadata[]>('getCoords', []))
         );
     }
 
     clearCoords(): Observable<void> {
-        return this.http.delete<void>(this.url);
+        return this.http.delete<void>(this.coordsUrl);
     }
       
     private handleError<T>(operation = 'operation', result?: T) {

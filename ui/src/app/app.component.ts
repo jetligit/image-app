@@ -3,6 +3,7 @@ import { GoogleMapsModule, GoogleMap } from '@angular/google-maps';
 import { AppService } from './app.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ChangeDetectorRef } from '@angular/core';
+import { GoogleMapsLoaderService } from './google-maps-loader.service';
 
 @Component({
   selector: 'app-root',
@@ -11,21 +12,31 @@ import { ChangeDetectorRef } from '@angular/core';
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
-export class App implements OnInit {
+export class AppComponent implements OnInit {
   coords: { lat: number; lng: number; date: string }[] = [];
   center = { lat: 40.7128, lng: -74.0060 };
-  markers: { myMarker: google.maps.Marker, info: google.maps.InfoWindow}[] = [];
+  markers: { myMarker: google.maps.Marker, info: google.maps.InfoWindow }[] = [];
   zoom = 12;
+  googleMapsLoaded = false;
 
   @ViewChild(GoogleMap) map!: GoogleMap;
 
   constructor(
     private appService: AppService,
     private cdr: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private mapsLoader: GoogleMapsLoaderService
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    if (!isPlatformBrowser(this.platformId)) return;
+
+    // Wait for Google Maps API to load
+    await this.mapsLoader.load();
+    this.googleMapsLoaded = true;
+    this.cdr.detectChanges(); // ensure view updates after map is ready
+
+    // Fetch backend coordinates
     this.getCoords();
   }
 
@@ -37,9 +48,7 @@ export class App implements OnInit {
     if (files && files.length > 0) {
       const myFile = files[0];
       this.appService.processImage(myFile).subscribe({
-        next: meta => {
-          this.addMarker(meta.latitude, meta.longitude, meta.date);
-        },
+        next: meta => this.addMarkerSafe(meta.latitude, meta.longitude, meta.date),
         error: err => console.error('Upload failed:', err)
       });
     }
@@ -49,14 +58,14 @@ export class App implements OnInit {
     if (!isPlatformBrowser(this.platformId)) return;
 
     this.appService.getCoords().subscribe(rawCoords => {
-      this.coords = rawCoords.map(coord => ({
+      const newCoords = rawCoords.map(coord => ({
         lat: coord.latitude,
         lng: coord.longitude,
         date: coord.date
       }));
-      rawCoords.forEach(meta => {
-        this.addMarker(meta.latitude, meta.longitude, meta.date);
-      });
+
+      newCoords.forEach(coord => this.addMarkerSafe(coord.lat, coord.lng, coord.date));
+      this.coords.push(...newCoords);
     });
   }
 
@@ -70,26 +79,32 @@ export class App implements OnInit {
         this.markers = [];
         this.cdr.detectChanges();
       },
-      error: (err: any) => console.error("failed to clear"),
+      error: err => console.error('Failed to clear', err),
     });
   }
 
-  addMarker(lat: number, lng: number, date: string): void {
-    if (!isPlatformBrowser(this.platformId)) return;
+  private addMarkerSafe(lat: number, lng: number, date: string) {
+    if (this.map?.googleMap) {
+      this.addMarker(lat, lng, date);
+    } else {
+      // Store for later in case map not ready
+      this.coords.push({ lat, lng, date });
+    }
+  }
 
-    const Latlng = { lat, lng };
+  private addMarker(lat: number, lng: number, date: string): void {
+    if (!this.map?.googleMap) return;
+
     const marker = new google.maps.Marker({
-      position: Latlng,
-      map: this.map.googleMap!,
+      position: { lat, lng },
+      map: this.map.googleMap,
     });
 
     const infoWindow = new google.maps.InfoWindow({
       content: `<div>date: ${date}</div>`,
     });
 
-    marker.addListener("click", () => {
-      infoWindow.open(this.map.googleMap!, marker);
-    });
+    marker.addListener('click', () => infoWindow.open(this.map.googleMap!, marker));
 
     this.markers.push({ myMarker: marker, info: infoWindow });
   }
