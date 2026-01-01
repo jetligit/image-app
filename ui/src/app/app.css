@@ -11,9 +11,9 @@ html, body {
   
   #fileInput {
     position: absolute;
-    top: 10px;
+    top: 0px;
     right: 10px;
-    z-index: 10; 
+    
   }
   
   
@@ -23,10 +23,13 @@ html, body {
   }
 
   button{
-    margin: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
   }
 
   input {
-    margin: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
   }
   
