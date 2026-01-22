@@ -9,7 +9,7 @@ export class GoogleMapsLoaderService {
 
   constructor() {
     this.loader = new Loader({
-      apiKey: 'AIzaSyAltVQlhGEc_JXTuic4feCAyWJikyqJdrY',
+      apiKey: '',
       version: 'weekly',
     });
   }
